@@ -7,6 +7,16 @@ class CallHandlerController < ApplicationController
     render action: "init_call.xml.builder", :layout => false
   end
 
+  def status_callback
+    search = Search.find(params["search_id"])
+    search_place = SearchPlace.find_by(search: search, place_id: params["place_id"])
+    search_place.update(recording_url: params["RecordingUrl"])
+    search_place.update(result: false) if search_place.result == nil
+
+    SearchResults.new(search).run if search_complete?(search)
+    render :nothing => true
+  end
+
   def handle_response
     search = Search.find(params["search_id"])
     place = Place.find(params["place_id"])

@@ -4,6 +4,7 @@ class CreateSearchPlaces < ActiveRecord::Migration
       t.integer :search_id
       t.integer :place_id
       t.boolean :result
+      t.string :recording_url
 
       t.timestamps
     end

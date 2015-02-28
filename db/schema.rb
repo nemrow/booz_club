@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20150228015011) do
     t.integer  "search_id"
     t.integer  "place_id"
     t.boolean  "result"
+    t.string   "recording_url"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,19 +1,29 @@
 $.backstretch("<%= image_path 'bg-img.jpg' %>")
+$('[name=cell]').mask("(999) 999-9999")
 
 placesArray = []
 placesCount = null
 
-runFinder = (data={}) ->
+runFinder = (dataArray={}) ->
   placesArray = []
   placesCount = null
 
+  overridingData = {}
+  for input in dataArray
+    overridingData[input.name] = input.value unless input.value.length == 0
+
   data = {
-    lat: "37.805620"
-    long: "-122.431898"
+    latitude: @currentCoordinates.lat()
+    longitude: @currentCoordinates.lng()
     radius: "500"
   }
 
-  @latLng = new google.maps.LatLng(data.lat, data.long)
+  $.extend data, overridingData
+
+  return unless validateData(data)
+
+
+  @latLng = new google.maps.LatLng(data.latitude, data.longitude)
   @map = new google.maps.Map($('#map-node')[0], {center: @latLng, zoom: 15})
 
   nearbyRequestData = {
@@ -25,6 +35,23 @@ runFinder = (data={}) ->
   @placesService = new google.maps.places.PlacesService(@map)
 
   @placesService.nearbySearch(nearbyRequestData, nearbyCallback)
+
+validateData = (data) ->
+  errors = {}
+  if !data.description || data.description.length < 4
+    errors["description"] = "You must tell us what type of booze you want. \n\n"
+  if !data.cell || !data.cell.match(/\(\d{3}\) \d{3}-\d{4}/)
+    errors["cell"] = "We need a correct cell phone number. "
+
+  if Object.keys(errors).length > 0
+    errorText = ""
+    for key, error of errors
+      errorText += error
+    swal("Oops...", errorText, "error")
+    false
+  else
+    true
+
 
 nearbyCallback = (results, status) ->
   placesCount = results.length
@@ -41,33 +68,45 @@ neededPlaceAttrs = (place) ->
   types: place.types
   phone_number: place.formatted_phone_number
 
+clearForm = () ->
+  $('.status-form input[type=text]').val("")
+
 placesSearchComplete = () ->
   placesNames = placesArray.map (place) ->
     place.name
 
-  swal("We're checking #{placesNames.length} places!", placesNames.join(', '), "success")
+  subText = "We are checking inventory at #{placesNames.length} places...\n\n #{placesNames.join(', ')}"
+
+  swal("Sweet! We will text you shortly.", subText, "success")
 
   data = {
     description: "Greygoose Vodka"
     cell: "17078496085"
     places: placesArray
   }
+
+  clearForm()
   $.post '/search', data
 
 
 # Handle form submission
 $('#find-form').submit (e) ->
   e.preventDefault()
-  runFinder()
+  runFinder($(@).serializeArray())
 
 
-######## GET THE CURRENT LOCATIONNN
+####### GET THE CURRENT LOCATIONNN
 
-# initializeLocation = (pos) ->
-#   @latLng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+initializeLocation = (pos) ->
+  @currentCoordinates = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
 
-# locationError = (err) ->
-#   console.warn('ERROR(' + err.code + '): ' + err.message)
+locationError = (err) ->
+  console.warn('ERROR(' + err.code + '): ' + err.message)
 
+mapOptions = {
+  enableHighAccuracy: true
+  timeout: 75000
+  maximumAge: 3000
+}
 
-# navigator.geolocation.getCurrentPosition(initializeLocation, locationError, mapOptions)
+navigator.geolocation.getCurrentPosition(initializeLocation, locationError, mapOptions)

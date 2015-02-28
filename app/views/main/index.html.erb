@@ -7,8 +7,13 @@
     <span>(with up to the minute accuracy)</span>
   </h2>
   <form id="find-form" class="status-form">
-    <input type="text" placeholder="Name of booz you want. ex: Lagunitas Little Sumpin’ Sumpin’" name="type">
-    <input type="text" placeholder="(XXX) XXX-3294" name="call">
+    <input type="text" placeholder="Name of booz you want. ex: Lagunitas Little Sumpin’ Sumpin’" name="description">
+    <input type="text" placeholder="(XXX) XXX-3294" name="cell">
+    <% if ENV["LAT_LONG"] %>
+      <input type="text" placeholder="Latitude" name="latitude">
+      <input type="text" placeholder="Longitude" name="longitude">
+      <input type="text" placeholder="Radius" name="radius">
+    <% end %>
     <input type="submit" value="Find Booz">
   </form>
   <button class="test-post">TEST!</button>

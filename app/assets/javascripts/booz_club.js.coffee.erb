@@ -20,7 +20,11 @@ runFinder = (dataArray={}) ->
 
   $.extend data, overridingData
 
+  console.log "HIT"
+  console.log data
   return unless validateData(data)
+
+  console.log "STILL HIT 1"
 
 
   @latLng = new google.maps.LatLng(data.latitude, data.longitude)
@@ -34,6 +38,7 @@ runFinder = (dataArray={}) ->
 
   @placesService = new google.maps.places.PlacesService(@map)
 
+  console.log "STILL HIT 2"
   @placesService.nearbySearch(nearbyRequestData, nearbyCallback)
 
 validateData = (data) ->

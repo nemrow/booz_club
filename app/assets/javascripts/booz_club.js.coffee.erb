@@ -40,6 +40,7 @@ runFinder = (dataArray={}) ->
 
   console.log "STILL HIT 2"
   @placesService.nearbySearch(nearbyRequestData, nearbyCallback)
+  console.log "STILL HIT 3"
 
 validateData = (data) ->
   errors = {}
@@ -59,11 +60,14 @@ validateData = (data) ->
 
 
 nearbyCallback = (results, status) ->
+  console.log "STILL HIT nearbyCallback"
+  console.log results
   placesCount = results.length
   for place in results
     @placesService.getDetails({placeId: place.place_id}, detailCallback)
 
 detailCallback = (place, status) ->
+  console.log "HIT detailCallback"
   placesArray.push neededPlaceAttrs(place) if status == "OK"
   placesSearchComplete() if --placesCount == 0
 
@@ -77,6 +81,7 @@ clearForm = () ->
   $('.status-form input[type=text]').val("")
 
 placesSearchComplete = () ->
+  console.log "hit COMPLETE"
   placesNames = placesArray.map (place) ->
     place.name
 
@@ -89,6 +94,8 @@ placesSearchComplete = () ->
     cell: "17078496085"
     places: placesArray
   }
+
+  console.log "HIT 7"
 
   clearForm()
   $.post '/search', data

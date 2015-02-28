@@ -10,11 +10,22 @@ class SearchController < ApplicationController
       )
       search.places << place
     end
+    search.update(location: basic_search_location_builder(params["places"].first[1]["address"]))
     BulkCaller.new(search).run
   end
 
   def format_phone_number(phone_number)
     "1" + phone_number.gsub(/\(|\)|\s|-/, "")
+  end
+
+  def basic_search_location_builder(address_data)
+    needed_components = ["locality", "administrative_area_level_1"]
+    address = {}
+    address_data.each do |address_component|
+      matched_component = (address_component[1]["types"] & needed_components)
+      address[matched_component.first] = address_component[1]["short_name"] if matched_component.any?
+    end
+    "#{address['locality']}, #{address['administrative_area_level_1']}"
   end
 
   def address_builder(address_data)

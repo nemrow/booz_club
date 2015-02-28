@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'stats', to: 'stats#index'
+
   post 'search', to: 'search#new'
   post 'init_call', to: 'call_handler#init_call'
   post 'handle_response', to: 'call_handler#handle_response'

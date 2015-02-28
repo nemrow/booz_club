@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20150228015011) do
 
   create_table "searches", force: true do |t|
     t.string   "description"
+    t.string   "location"
     t.integer  "user_id"
     t.boolean  "complete",    default: false
     t.datetime "created_at"

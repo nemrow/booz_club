@@ -1,0 +1,38 @@
+<h1>Booz Club Stats</h1>
+
+<table class="pure-table pure-table-horizontal" style="text-align:center">
+  <thead>
+    <tr>
+      <th>Location</th>
+      <th>Complete?</th>
+      <th>Place Count</th>
+      <th>In Stock</th>
+      <th>Not In Stock</th>
+      <th>No Answer</th>
+      <th>Hangup</th>
+      <th>Call Recordings</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @searches.each do |search| %>
+      <tr>
+        <td><%= search.location %></td>
+        <td><%= search.complete %></td>
+        <td><%= search.places.count %></td>
+        <td><%= search.search_places.where(result: "in stock").count %></td>
+        <td><%= search.search_places.where(result: "not in stock").count %></td>
+        <td><%= search.search_places.where(result: "no answer").count %></td>
+        <td><%= search.search_places.where(result: "hangup").count %></td>
+        <td>
+          <% search.places.each do |place| %>
+            <%= link_to place.name, SearchPlace.find_by(place: place, search: search).recording_url, class: "recording_url_links" %>
+          <% end %>
+          <br>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+

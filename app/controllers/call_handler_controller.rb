@@ -31,12 +31,12 @@ class CallHandlerController < ApplicationController
     search_place = SearchPlace.find_by(search: search, place: place)
     if params['Digits'] == '1'
       search_place.update(result: SearchPlace::IN_STOCK, steps_completed: SearchPlace::CALL_RESPONDED)
-      render action: 'goodbye_success.xml.builder', :layout => false
+      render action: 'goodbye.xml.builder', :layout => false
     end
 
     if params['Digits'] == '2'
       search_place.update(result: SearchPlace::NOT_IN_STOCK, steps_completed: SearchPlace::CALL_RESPONDED)
-      render action: 'goodbye_fail.xml.builder', :layout => false
+      render action: 'goodbye.xml.builder', :layout => false
     end
 
     check_for_search_completion(search)

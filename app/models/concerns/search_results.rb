@@ -21,13 +21,14 @@ class SearchResults
   def success_result_text
     text = "The following retailers currently have #{@search.description} in stock right now :) \n\n"
     success_places.each do |place|
-      text += "#{place.name}\n#{place.address}"
+      text += "#{place.name}\n#{place.address} \n\n"
     end
+    text += "Cheers"
     text
   end
 
   def fail_result_text
-    text = "Unfortunately, there are no retailers near you that have #{@search.description} in stock :( \n"
+    text = "Unfortunately, there are no retailers near you that have #{@search.description} in stock :( \n\n"
     text += "Search for other booz "
     text
   end

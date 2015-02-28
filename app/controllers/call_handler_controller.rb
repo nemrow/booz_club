@@ -13,7 +13,7 @@ class CallHandlerController < ApplicationController
     search_place.update(recording_url: params["RecordingUrl"])
     search_place.update(result: false) if search_place.result == nil
 
-    SearchResults.new(search).run if search_complete?(search)
+    check_for_search_completion(search)
     render :nothing => true
   end
 
@@ -31,10 +31,17 @@ class CallHandlerController < ApplicationController
       render action: 'goodbye_fail.xml.builder', :layout => false
     end
 
-    SearchResults.new(search).run if search_complete?(search)
+    check_for_search_completion(search)
   end
 
   private
+
+  def check_for_search_completion(search)
+    if search_complete?(search) && search.complete != true
+      search.update(complete: true)
+      SearchResults.new(search).run
+    end
+  end
 
   def search_complete?(search)
     SearchPlace.where(search: search).all? {|sp| sp.result != nil}

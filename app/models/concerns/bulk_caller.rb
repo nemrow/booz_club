@@ -6,8 +6,8 @@ class BulkCaller
   def run
     @search.places.each do |place|
       data = {
-        # :to => place.phone_number
-        to: "17078496085",
+        :to => place.phone_number,
+        # to: "17078496085",
         from: "14157636769",
         record: true,
         if_machine: "Hangup",

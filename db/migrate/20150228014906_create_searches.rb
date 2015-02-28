@@ -3,6 +3,7 @@ class CreateSearches < ActiveRecord::Migration
     create_table :searches do |t|
       t.string :description
       t.integer :user_id
+      t.boolean :complete, default: false
 
       t.timestamps
     end

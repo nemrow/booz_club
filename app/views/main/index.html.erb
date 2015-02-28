@@ -1,10 +1,18 @@
-<form id="find-form">
-  <input type="text" name="type">
-  <input type="text" name="cell">
-  <input type="submit">
-</form>
-
-<button class="test-post">TEST!</button>
+<div id="main-content">
+  <%= image_tag "logo.jpg", {class: "logo"} %>
+  <h1>Find your favorite drink anywhere</h1>
+  <h2>
+    Tell us the booz you are looking for and we will let you<br>
+    know which retailer near you currently has it in stock<br>
+    <span>(with up to the minute accuracy)</span>
+  </h2>
+  <form id="find-form" class="status-form">
+    <input type="text" placeholder="Name of booz you want. ex: Lagunitas Little Sumpin’ Sumpin’" name="type">
+    <input type="text" placeholder="(XXX) XXX-3294" name="call">
+    <input type="submit" value="Find Booz">
+  </form>
+  <button class="test-post">TEST!</button>
+</div>
 
 <div id="map-node"></div>
 

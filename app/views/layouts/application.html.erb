@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BoozClub</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBQxflXcLzTmlImPvUj8DAn6FmF4SgIQxg"></script>
+
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%= yield %>
+<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+</body>
+</html>

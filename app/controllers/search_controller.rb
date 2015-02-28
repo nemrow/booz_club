@@ -1,18 +1,16 @@
 class SearchController < ApplicationController
   def new
-    render nothing: true
-
-    # user = User.find_or_create_by(cell: params["cell"])
-    # search = Search.create({description: params["description"], user: user})
-    # places = params["places"].map do |place_data|
-    #   place = Place.find_or_create_by(
-    #     name: place_data[1]["name"],
-    #     address: address_builder(place_data[1]["address"]),
-    #     phone_number: format_phone_number(place_data[1]["phone_number"])
-    #   )
-    #   search.places << place
-    # end
-    # BulkCaller.new(search).run
+    user = User.find_or_create_by(cell: params["cell"])
+    search = Search.create({description: params["description"], user: user})
+    places = params["places"].map do |place_data|
+      place = Place.find_or_create_by(
+        name: place_data[1]["name"],
+        address: address_builder(place_data[1]["address"]),
+        phone_number: format_phone_number(place_data[1]["phone_number"])
+      )
+      search.places << place
+    end
+    BulkCaller.new(search).run
   end
 
   def format_phone_number(phone_number)

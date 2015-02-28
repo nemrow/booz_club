@@ -15,6 +15,9 @@ class BulkCaller
         url: ENV["BASE_URL"] + "/init_call?place_id=#{place.id}&search_id=#{@search.id}"
       }
 
+      search_place = SearchPlace.find_by(search: @search, place: place)
+      search_place.update(steps_completed: SearchPlace::CALL_PLACED)
+
       @twilio = Twilio::REST::Client.new ENV['TWILIO_SID'], ENV['TWILIO_AUTH_TOKEN']
       @twilio.account.calls.create data
     end

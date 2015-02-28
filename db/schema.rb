@@ -27,7 +27,8 @@ ActiveRecord::Schema.define(version: 20150228015011) do
   create_table "search_places", force: true do |t|
     t.integer  "search_id"
     t.integer  "place_id"
-    t.boolean  "result"
+    t.string   "result"
+    t.integer  "steps_completed", default: 0
     t.string   "recording_url"
     t.datetime "created_at"
     t.datetime "updated_at"

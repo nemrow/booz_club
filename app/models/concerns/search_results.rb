@@ -34,6 +34,6 @@ class SearchResults
   end
 
   def success_places
-    @success_places ||= SearchPlace.where(search: @search, result: true).all.map(&:place)
+    @success_places ||= SearchPlace.where(search: @search, result: SearchPlace::IN_STOCK).all.map(&:place)
   end
 end

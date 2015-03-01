@@ -106,18 +106,20 @@ $('#find-form').submit (e) ->
   e.preventDefault()
 
 ####### CHART SHIT
-responseRateChart = $("#response-rate-chart").get(0).getContext("2d")
-stockChart = $("#stock-chart").get(0).getContext("2d")
-successChart = $("#success-chart").get(0).getContext("2d")
 
-chartOptions = {
-  segmentShowStroke : true
-  tooltipTemplate: "<%%= label %> <%%= value + '%' %>"
-}
+if $("#response-rate-chart").length > 0
+  responseRateChart = $("#response-rate-chart").get(0).getContext("2d")
+  stockChart = $("#stock-chart").get(0).getContext("2d")
+  successChart = $("#success-chart").get(0).getContext("2d")
 
-new Chart(responseRateChart).Doughnut(window.responseRateChartData,chartOptions)
-new Chart(stockChart).Doughnut(window.stockChartData,chartOptions)
-new Chart(successChart).Doughnut(window.successChartData,chartOptions)
+  chartOptions = {
+    segmentShowStroke : true
+    tooltipTemplate: "<%%= label %> <%%= value + '%' %>"
+  }
+
+  new Chart(responseRateChart).Doughnut(window.responseRateChartData,chartOptions)
+  new Chart(stockChart).Doughnut(window.stockChartData,chartOptions)
+  new Chart(successChart).Doughnut(window.successChartData,chartOptions)
 
 
 ####### GET THE CURRENT LOCATIONNN

@@ -4,7 +4,7 @@ body {
 
 table.pure-table {
   width: 800px;
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
 }
 
 h1 {

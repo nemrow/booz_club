@@ -26,7 +26,10 @@
         <td><%= search.search_places.where(result: "hangup").count %></td>
         <td>
           <% search.places.each do |place| %>
-            <%= link_to place.name, SearchPlace.find_by(place: place, search: search).recording_url, class: "recording_url_links" %>
+            <% link_url = SearchPlace.find_by(place: place, search: search).recording_url %>
+            <% if link_url %>
+              <%= link_to place.name, link_url, class: "recording_url_links" %>
+            <% end %>
           <% end %>
           <br>
         </td>

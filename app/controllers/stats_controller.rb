@@ -6,5 +6,6 @@ class StatsController < ApplicationController
     @searches.each do |search|
       @success_number += 1 if SearchPlace.where(search: search, result: SearchPlace::IN_STOCK).count > 0
     end
+    @total_calls = SearchPlace.count
   end
 end

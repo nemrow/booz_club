@@ -1,14 +1,30 @@
 <h1>Booz Club Stats</h1>
 
 <h2>
-  <%= @searches.count %> <span>Total Searches</span><br>
-  <%= @success_number %> <span>Found Booz Stories!</span>
-  <%= @total_calls %> <span>Total Calls</span>
+  <%= @searches.count %> <span>Total Searches</span>
 </h2>
+
+<div class="all-charts-container">
+  <div class="chart-container">
+    <h2>Response Rates</h2>
+    <canvas id="response-rate-chart" width="150" height="150"></canvas>
+  </div>
+  <div class="chart-container">
+    <h2>In Stock</h2>
+    <canvas id="stock-chart" width="150" height="150"></canvas>
+  </div>
+  <div class="chart-container">
+    <h2>Successful Search</h2>
+    <canvas id="success-chart" width="150" height="150"></canvas>
+  </div>
+</div>
+
+
 <table class="pure-table pure-table-horizontal" style="text-align:center">
   <thead>
     <tr>
       <th>Location</th>
+      <th>Search</th>
       <th>Complete?</th>
       <th>Place Count</th>
       <th>In Stock</th>
@@ -23,6 +39,7 @@
     <% @searches.each do |search| %>
       <tr>
         <td><%= search.location %></td>
+        <td><%= search.description %></td>
         <td><%= search.complete %></td>
         <td><%= search.places.count %></td>
         <td><%= search.search_places.where(result: "in stock").count %></td>
@@ -42,5 +59,52 @@
     <% end %>
   </tbody>
 </table>
+
+<script type="text/javascript">
+  window.responseRateChartData = [
+    {
+        value: <%= @stats[:response_rates][:total_hangups] %>,
+        color:"#F7464A",
+        highlight: "#FF5A5E",
+        label: "Hangups"
+    },
+    {
+        value: <%= @stats[:response_rates][:total_responses] %>,
+        color: "#46BFBD",
+        highlight: "#5AD3D1",
+        label: "Responses"
+    }
+  ]
+
+  window.stockChartData = [
+    {
+        value: <%= @stats[:stock][:in_stock] %>,
+        color:"#F7464A",
+        highlight: "#FF5A5E",
+        label: "In Stock"
+    },
+    {
+        value: <%= @stats[:stock][:not_in_stock] %>,
+        color: "#46BFBD",
+        highlight: "#5AD3D1",
+        label: "Not In Stock"
+    }
+  ]
+
+  window.successChartData = [
+    {
+        value: <%= @stats[:search_success][:success] %>,
+        color:"#F7464A",
+        highlight: "#FF5A5E",
+        label: "Success"
+    },
+    {
+        value: <%= @stats[:search_success][:fail] %>,
+        color: "#46BFBD",
+        highlight: "#5AD3D1",
+        label: "Not Successful"
+    }
+  ]
+</script>
 
 

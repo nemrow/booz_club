@@ -101,6 +101,16 @@ a.recording_url_links:hover {
   color: #ccc;
 }
 
+.all-charts-container {
+  width: 100%;
+  margin: 0 auto 20px auto;
+}
+
+.chart-container {
+  display: inline-block;
+  margin: 0 20px
+}
+
 ::-webkit-input-placeholder {
    color: #7c6396;
 }

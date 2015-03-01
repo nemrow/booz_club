@@ -20,12 +20,7 @@ runFinder = (dataArray={}) ->
 
   $.extend data, overridingData
 
-  console.log "HIT"
-  console.log data
   return unless validateData(data)
-
-  console.log "STILL HIT 1"
-
 
   @latLng = new google.maps.LatLng(data.latitude, data.longitude)
   @map = new google.maps.Map($('#map-node')[0], {center: @latLng, zoom: 15})
@@ -38,9 +33,7 @@ runFinder = (dataArray={}) ->
 
   @placesService = new google.maps.places.PlacesService(@map)
 
-  console.log "STILL HIT 2"
   @placesService.nearbySearch(nearbyRequestData, nearbyCallback)
-  console.log "STILL HIT 3"
 
 validateData = (data) ->
   errors = {}
@@ -60,14 +53,12 @@ validateData = (data) ->
 
 
 nearbyCallback = (results, status) ->
-  console.log "STILL HIT nearbyCallback"
-  console.log results
   placesCount = results.length
+  swal("Sorry, no results found!", "Maybe you should make some moonshine?", "error") if placesCount < 1
   for place in results
     @placesService.getDetails({placeId: place.place_id}, detailCallback)
 
 detailCallback = (place, status) ->
-  console.log "HIT detailCallback"
   placesArray.push neededPlaceAttrs(place) if status == "OK"
   placesSearchComplete() if --placesCount == 0
 
@@ -81,7 +72,6 @@ clearForm = () ->
   $('.status-form input[type=text]').val("")
 
 placesSearchComplete = () ->
-  console.log "hit COMPLETE"
   placesNames = placesArray.map (place) ->
     place.name
 
@@ -95,7 +85,6 @@ placesSearchComplete = () ->
     places: placesArray
   }
 
-  console.log "HIT 7"
 
   clearForm()
   $.post '/search', data

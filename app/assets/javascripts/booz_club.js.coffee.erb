@@ -12,11 +12,9 @@ runFinder = (dataArray={}) ->
   for input in dataArray
     overridingData[input.name] = input.value unless input.value.length == 0
 
-  @data = {
-    latitude: @currentCoordinates.lat()
-    longitude: @currentCoordinates.lng()
-    radius: "1000"
-  }
+  @data = {radius: "1000"}
+  if @currentCoordinates
+    $.extend @data, {latitude: @currentCoordinates.lat(), longitude: @currentCoordinates.lng()}
 
   $.extend @data, overridingData
 
@@ -51,12 +49,22 @@ validateData = (data) ->
   else
     true
 
-
 nearbyCallback = (results, status) ->
   placesCount = results.length
-  swal("Sorry, no results found!", "Maybe you should make some moonshine?", "error") if placesCount < 1
-  for place in results
+  if placesCount < 1
+    swal("Sorry, no results found!", "Maybe you should make some moonshine?", "error")
+    resetScreen()
+  else
+    nearbyBatcher(results, 0)
+
+nearbyBatcher = (results, currentIndex) ->
+  nextIndex = currentIndex + 5
+  currentBatch = results.slice(currentIndex, nextIndex)
+  for place in currentBatch
     @placesService.getDetails({placeId: place.place_id}, detailCallback)
+  setTimeout ->
+    nearbyBatcher(results, nextIndex) if results[nextIndex] != undefined
+  , 2000
 
 detailCallback = (place, status) ->
   placesArray.push neededPlaceAttrs(place) if status == "OK"
@@ -82,13 +90,19 @@ placesSearchComplete = () ->
   @data["places"] = placesArray
 
   clearForm()
+  resetScreen()
   $.post '/search', data
 
+resetScreen = () ->
+  $('.status-form').slideDown()
+  $('.spinner').slideUp()
 
 # Handle form submission
 $('#find-form').submit (e) ->
-  e.preventDefault()
+  $('.status-form').slideUp()
+  $('.spinner').slideDown()
   runFinder($(@).serializeArray())
+  e.preventDefault()
 
 
 ####### GET THE CURRENT LOCATIONNN

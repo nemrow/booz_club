@@ -12,22 +12,22 @@ runFinder = (dataArray={}) ->
   for input in dataArray
     overridingData[input.name] = input.value unless input.value.length == 0
 
-  data = {
+  @data = {
     latitude: @currentCoordinates.lat()
     longitude: @currentCoordinates.lng()
-    radius: "500"
+    radius: "1000"
   }
 
-  $.extend data, overridingData
+  $.extend @data, overridingData
 
-  return unless validateData(data)
+  return unless validateData(@data)
 
-  @latLng = new google.maps.LatLng(data.latitude, data.longitude)
+  @latLng = new google.maps.LatLng(@data.latitude, @data.longitude)
   @map = new google.maps.Map($('#map-node')[0], {center: @latLng, zoom: 15})
 
   nearbyRequestData = {
     location: @latLng
-    radius: data.radius
+    radius: @data.radius
     types: ['liquor_store']
   }
 
@@ -79,12 +79,7 @@ placesSearchComplete = () ->
 
   swal("Sweet! We will text you shortly.", subText, "success")
 
-  data = {
-    description: "Greygoose Vodka"
-    cell: "17078496085"
-    places: placesArray
-  }
-
+  @data["places"] = placesArray
 
   clearForm()
   $.post '/search', data

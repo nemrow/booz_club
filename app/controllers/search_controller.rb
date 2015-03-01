@@ -36,8 +36,10 @@ class SearchController < ApplicationController
     needed_components = ["street_number", "locality", "route"]
     address = {}
     address_data.each do |address_component|
-      matched_component = (address_component[1]["types"] & needed_components)
-      address[matched_component.first] = address_component[1]["short_name"] if matched_component.any?
+      if address_component[1]["types"]
+        matched_component = (address_component[1]["types"] & needed_components)
+        address[matched_component.first] = address_component[1]["short_name"] if matched_component.any?
+      end
     end
     "#{address['street_number']} #{address['route']}, #{address['locality']}"
   end

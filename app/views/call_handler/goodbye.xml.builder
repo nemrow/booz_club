@@ -1,4 +1,4 @@
 xml.instruct!
 xml.Response do
-  xml.Say "Thanks for the quick reply! We will let the customer know."
+  xml.Play "https://s3-us-west-2.amazonaws.com/booz-club/alc_end.mp3"
 end

@@ -93,9 +93,7 @@ placesSearchComplete = () ->
   clearForm()
   resetScreen()
 
-  <% if ENV['LAT_LONG'] %>
   $.post '/search', data
-  <% end %>
 
 resetScreen = () ->
   $('.status-form').slideDown()

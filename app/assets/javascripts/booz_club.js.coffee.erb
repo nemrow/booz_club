@@ -12,7 +12,7 @@ runFinder = (dataArray={}) ->
   for input in dataArray
     overridingData[input.name] = input.value unless input.value.length == 0
 
-  @data = {radius: "1609"}
+  @data = {radius: "600"}
   if @currentCoordinates
     $.extend @data, {latitude: @currentCoordinates.lat(), longitude: @currentCoordinates.lng()}
 

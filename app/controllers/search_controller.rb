@@ -16,6 +16,26 @@ class SearchController < ApplicationController
       search.update(location: basic_search_location_builder(params["places"].first[1]["address"]))
       BulkCaller.new(search).run
     end
+    check_for_high_search_traffic
+  end
+
+  def check_for_high_search_traffic
+    send_high_traffic_alert_text if number_of_searches_in_past_hour == 25
+  end
+
+  def send_high_traffic_alert_text
+    text_data = {
+      :from => '14157636769',
+      :to => ENV['EMERGENCY_CELL_NUMBER'],
+      :body => "Booz.club has had a high number of searches in the past hour. CHECK ON IT!"
+    }
+
+    @twilio = Twilio::REST::Client.new ENV['TWILIO_SID'], ENV['TWILIO_AUTH_TOKEN']
+    @twilio.account.messages.create text_data
+  end
+
+  def number_of_searches_in_past_hour
+    Search.where("created_at > ?", Time.now - 1.hours).count
   end
 
   def format_phone_number(phone_number)

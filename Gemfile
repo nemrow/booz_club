@@ -16,6 +16,7 @@ gem 'coffee-rails', '~> 4.0.0'
 
 gem 'twilio-ruby', '~> 3.12'
 gem 'byebug', group: :development
+gem 'obscenity'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

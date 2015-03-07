@@ -2,6 +2,7 @@ class SearchController < ApplicationController
   def new
     user = User.find_or_create_by(cell: params["cell"])
     search = Search.create({description: params["description"], user: user})
+    return false if obscenity?(search)
     params["places"].each do |place_data|
       if place_data[1]["phone_number"] && place_data[1]["address"] && place_data[1]["name"]
         place = Place.find_or_create_by(
@@ -17,6 +18,25 @@ class SearchController < ApplicationController
       BulkCaller.new(search).run
     end
     check_for_high_search_traffic
+  end
+
+  def obscenity?(search)
+    if Obscenity.profane?(search.description)
+      search.update(cancelled: "obscenity")
+      send_search_rejected_message(search)
+      true
+    end
+  end
+
+  def send_search_rejected_message(search)
+    text_data = {
+      :from => '14157636769',
+      :to => search.user.cell,
+      :body => "Your search \"#{search.description}\" has been flagged as innapropriate. We have cancelled this search."
+    }
+
+    @twilio = Twilio::REST::Client.new ENV['TWILIO_SID'], ENV['TWILIO_AUTH_TOKEN']
+    @twilio.account.messages.create text_data
   end
 
   def check_for_high_search_traffic

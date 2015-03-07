@@ -39,7 +39,8 @@ class SearchController < ApplicationController
   end
 
   def format_phone_number(phone_number)
-    "1" + phone_number.gsub(/\(|\)|\s|-/, "")
+    formatted_num = "1" + phone_number.gsub(/\(|\)|\s|-/, "")
+    formatted_num.match(/^1\d{10}/)[0]
   end
 
   def basic_search_location_builder(address_data)

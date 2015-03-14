@@ -6,7 +6,7 @@ searchData = {}
 currentRadius = 200
 
 runFinder = (dataArray={}) ->
-  searchData.placesArray = []
+  searchData.places = []
   placesCount = null
 
   overridingData = {}
@@ -79,7 +79,7 @@ nearbyBatcher = (results, currentIndex) ->
   , 2000
 
 detailCallback = (place, status) ->
-  searchData.placesArray.push neededPlaceAttrs(place) if status == "OK"
+  searchData.places.push neededPlaceAttrs(place) if status == "OK"
   placesSearchComplete() if --placesCount == 0
 
 neededPlaceAttrs = (place) ->
@@ -92,7 +92,7 @@ clearForm = () ->
   $('.status-form input[type=text]').val("")
 
 placesSearchComplete = () ->
-  placesNames = searchData.placesArray.map (place) ->
+  placesNames = searchData.places.map (place) ->
     place.name
 
   miles = (601 / 1600).toFixed(1)

@@ -29,7 +29,7 @@ class SearchResults
 
   def fail_result_text
     text = "Unfortunately, there are no retailers near you that have #{@search.description} in stock :( \n\n"
-    text += "Search for other booz "
+    text += "Search for other booz - www.booz.club "
     text
   end
 

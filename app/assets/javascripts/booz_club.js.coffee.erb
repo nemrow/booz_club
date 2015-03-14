@@ -14,10 +14,7 @@ runFinder = (dataArray={}) ->
     overridingData[input.name] = input.value unless input.value.length == 0
 
   if @currentCoordinates
-    # $.extend searchData, {latitude: "38.252065", longitude: "-122.60695"}
     $.extend searchData, {latitude: @currentCoordinates.lat(), longitude: @currentCoordinates.lng()}
-
-  console.log searchData
 
   $.extend searchData, overridingData
 
@@ -58,20 +55,18 @@ validateData = ->
     true
 
 nearbyCallback = (results, status) ->
-  console.log results
-  console.log status
   placesCount = results.length
   if currentRadius > 4828 && placesCount < 5
     swal("Sorry, not enough booz stores around you.", "Maybe you should make some moonshine?", "error")
     resetScreen()
   else if placesCount < 12
+    $('.loading-container p').text("Currently found #{placesCount} possible places. Still looking...")
     setTimeout ->
-      console.log currentRadius
-      console.log placesCount
       currentRadius += 200
       sendNearbyRequest()
     , 330
   else
+    $('.loading-container p').text("Found #{placesCount} places. Hold on, lemme take a shot!")
     nearbyBatcher(results, 0)
 
 nearbyBatcher = (results, currentIndex) ->
@@ -109,17 +104,17 @@ placesSearchComplete = () ->
   clearForm()
   resetScreen()
 
-
   $.post '/search', searchData
 
 resetScreen = () ->
   $('.status-form').slideDown()
-  $('.spinner').slideUp()
+  $('.loading-container').slideUp()
 
 # Handle form submission
 $('#find-form').submit (e) ->
+  $('.loading-container p').text('Locating the nearest liquor stores')
+  $('.loading-container').slideDown()
   $('.status-form').slideUp()
-  $('.spinner').slideDown()
   runFinder($(@).serializeArray())
   e.preventDefault()
 
@@ -144,6 +139,7 @@ if $("#response-rate-chart").length > 0
 
 initializeLocation = (pos) ->
   @currentCoordinates = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+  resetScreen()
 
 locationError = (err) ->
   console.warn('ERROR(' + err.code + '): ' + err.message)

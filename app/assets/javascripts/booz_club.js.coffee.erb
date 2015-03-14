@@ -95,7 +95,7 @@ placesSearchComplete = () ->
   placesNames = searchData.places.map (place) ->
     place.name
 
-  miles = (601 / 1600).toFixed(1)
+  miles = (currentRadius / 1600).toFixed(1)
 
   subText = "We found #{placesNames.length} places within #{miles} miles of you that we are checking inventory at...\n\n #{placesNames.join(', ')}"
 

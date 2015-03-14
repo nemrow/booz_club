@@ -1,31 +1,35 @@
 $.backstretch("<%= image_path 'bg-img.jpg' %>")
 $('[name=cell]').mask("(999) 999-9999")
 
-placesArray = []
 placesCount = null
+searchData = {}
+currentRadius = 200
 
 runFinder = (dataArray={}) ->
-  placesArray = []
+  searchData.placesArray = []
   placesCount = null
 
   overridingData = {}
   for input in dataArray
     overridingData[input.name] = input.value unless input.value.length == 0
 
-  @data = {radius: "600"}
   if @currentCoordinates
-    $.extend @data, {latitude: @currentCoordinates.lat(), longitude: @currentCoordinates.lng()}
+    # $.extend searchData, {latitude: "38.252065", longitude: "-122.60695"}
+    $.extend searchData, {latitude: @currentCoordinates.lat(), longitude: @currentCoordinates.lng()}
 
-  $.extend @data, overridingData
+  console.log searchData
 
-  return unless validateData(@data)
+  $.extend searchData, overridingData
 
-  @latLng = new google.maps.LatLng(@data.latitude, @data.longitude)
+  sendNearbyRequest() if validateData()
+
+sendNearbyRequest = ->
+  @latLng = new google.maps.LatLng(searchData.latitude, searchData.longitude)
   @map = new google.maps.Map($('#map-node')[0], {center: @latLng, zoom: 15})
 
   nearbyRequestData = {
     location: @latLng
-    radius: @data.radius
+    radius: currentRadius
     open_now: true
     types: ['liquor_store']
   }
@@ -34,27 +38,39 @@ runFinder = (dataArray={}) ->
 
   @placesService.nearbySearch(nearbyRequestData, nearbyCallback)
 
-validateData = (data) ->
+validateData = ->
   errors = {}
-  if !data.description || data.description.length < 4
+  if !searchData.description || searchData.description.length < 4
     errors["description"] = "You must tell us what type of booze you want. \n\n"
-  if !data.cell || !data.cell.match(/\(\d{3}\) \d{3}-\d{4}/)
+  if !searchData.cell || !searchData.cell.match(/\(\d{3}\) \d{3}-\d{4}/)
     errors["cell"] = "We need a correct cell phone number. "
+  if !searchData.latitude || !searchData.longitude
+    errors["location"] = "Make sure you allow location access in this browser."
 
   if Object.keys(errors).length > 0
     errorText = ""
     for key, error of errors
       errorText += error
     swal("Oops...", errorText, "error")
+    resetScreen()
     false
   else
     true
 
 nearbyCallback = (results, status) ->
+  console.log results
+  console.log status
   placesCount = results.length
-  if placesCount < 1
-    swal("Sorry, no results found!", "Maybe you should make some moonshine?", "error")
+  if currentRadius > 4828 && placesCount < 5
+    swal("Sorry, not enough booz stores around you.", "Maybe you should make some moonshine?", "error")
     resetScreen()
+  else if placesCount < 12
+    setTimeout ->
+      console.log currentRadius
+      console.log placesCount
+      currentRadius += 200
+      sendNearbyRequest()
+    , 330
   else
     nearbyBatcher(results, 0)
 
@@ -68,7 +84,7 @@ nearbyBatcher = (results, currentIndex) ->
   , 2000
 
 detailCallback = (place, status) ->
-  placesArray.push neededPlaceAttrs(place) if status == "OK"
+  searchData.placesArray.push neededPlaceAttrs(place) if status == "OK"
   placesSearchComplete() if --placesCount == 0
 
 neededPlaceAttrs = (place) ->
@@ -81,19 +97,20 @@ clearForm = () ->
   $('.status-form input[type=text]').val("")
 
 placesSearchComplete = () ->
-  placesNames = placesArray.map (place) ->
+  placesNames = searchData.placesArray.map (place) ->
     place.name
 
-  subText = "We are checking inventory at #{placesNames.length} places...\n\n #{placesNames.join(', ')}"
+  miles = (601 / 1600).toFixed(1)
+
+  subText = "We found #{placesNames.length} places within #{miles} miles of you that we are checking inventory at...\n\n #{placesNames.join(', ')}"
 
   swal("Sweet! We will text you shortly.", subText, "success")
-
-  @data["places"] = placesArray
 
   clearForm()
   resetScreen()
 
-  $.post '/search', data
+
+  $.post '/search', searchData
 
 resetScreen = () ->
   $('.status-form').slideDown()
@@ -138,3 +155,13 @@ mapOptions = {
 }
 
 navigator.geolocation.getCurrentPosition(initializeLocation, locationError, mapOptions)
+
+windowResize = ->
+  if $(window).width() < 600
+    $('input[name=description]').attr("placeholder", "Name of booz you want.")
+  else
+    $('input[name=description]').attr("placeholder", "Name of booz you want. ex: Lagunitas Little Sumpin’ Sumpin’")
+
+windowResize()
+$(window).resize ->
+  windowResize()

@@ -9,13 +9,14 @@ table.pure-table {
 
 h1 {
   font-family: 'Oswald', sans-serif;
-  font-size: 48px;
+  font-size: 2em !important;
   font-weight: 300;
   color: #fff;
   clear: both;
-  margin: 0 auto;
+  margin: 0 auto !important;
   border-bottom: 4px solid #7c6396;
   line-height: 90px;
+  width: 96%;
 }
 
 h2 {
@@ -23,6 +24,7 @@ h2 {
   font-size: 20px;
   font-weight: 700;
   color: #fff;
+  margin: 20px 10px 10px 10px;
 }
 
 h2 span {
@@ -34,18 +36,15 @@ h2 span {
 }
 
 #main-content {
-  position:absolute;
+  position:relative;
   text-align: center;
-  top:50%;
-  left:50%;
-  margin-top:-290px; /* this is half the height of your div*/
-  margin-left:-300px; /*this is half of width of your div*/
-  width: 600px;
+  max-width: 600px;
   height: 580px;
+  margin: 20px auto;
 }
 
 .status-form {
-  width: 600px;
+  width: 100%;
   position: relative;
   margin: 0 auto;
   text-align: center;
@@ -54,7 +53,7 @@ h2 span {
 .status-form input[type=text] {
   font-family: 'Lato', sans-serif;
   font-weight: 700;
-  width: 100%;
+  width: 96%;
   background: rgba(255,255,255,0.3);
   border: 2px solid #7c6396;
   border-radius: 4px;
@@ -62,7 +61,7 @@ h2 span {
   color: #7c6396;
   font-size: 20px;
   text-align: center;
-  margin: 20px 0;
+  margin: 20px 2%;
   padding: 15px 0;
 }
 
@@ -87,7 +86,7 @@ h2 span {
 .logo {
   width: 250px;
   position: relative;
-  margin: 0px auto 20px auto;
+  margin: 0 auto;
   clear: both;
 }
 
@@ -113,17 +112,21 @@ a.recording_url_links:hover {
 
 ::-webkit-input-placeholder {
    color: #7c6396;
+   padding: 0 5px;
 }
 
 :-moz-placeholder { /* Firefox 18- */
    color: #7c6396;
+   padding: 0 5px;
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
    color: #7c6396;
+   padding: 0 5px;
 }
 
 :-ms-input-placeholder {
    color: #7c6396;
+   padding: 0 5px;
 }
 
